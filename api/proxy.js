@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+i mport fetch from 'node-fetch';
 
 export default async (req, res) => {
   const resp = await fetch('https://studyuk.fun/goal/');
