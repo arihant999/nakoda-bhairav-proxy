@@ -1,5 +1,5 @@
 {
-  "v ersion": 2,
+  "version": 2,
   "builds": [
     { "src": "api/proxy.js", "use": "@vercel/node" }
   ],
