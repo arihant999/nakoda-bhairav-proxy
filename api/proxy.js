@@ -1,24 +1,24 @@
-const https = require('https');
+// /api/proxy.js
 
-export default function handler(req, res) {
-  https.get('https://studyuk.fun/goal/', (response) => {
-    let data = '';
+export default async function handler(req, res) {
+  try {
+    const targetUrl = 'https://studyuk.fun/goal/';
+    const response = await fetch(targetUrl);
+    let html = await response.text();
 
-    response.on('data', chunk => { data += chunk; });
-    response.on('end', () => {
-      let html = data
-        .replace(/studyuk\.fun/g, 'nakoda-bhairav-clone.vercel.app')
-        .replace(/@SDV_BOTX/g, '@MockManager')
-        .replace(/https:\/\/t\.me\/[^"']+/g, 'https://t.me/+rc5Psv_S2VJkMGM1')
-        .replace(/StudyUK/gi, 'NAKODA BHAIRAV');
+    // Replace all StudyUK branding with your info
+    html = html.replace(/https:\/\/t\.me\/[^\s"'<>]+/g, 'https://t.me/MockManager');
+    html = html.replace(/studyuk\.fun/g, 'nakoda-bhairav-clone.vercel.app');
+    html = html.replace(/StudyUK/gi, 'NAKODA BHAIRAV');
 
-      res.setHeader('Content-Type', 'text/html');
-      res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate');
-      res.status(200).end(html);
-    });
+    // ✅ Set headers properly for UTF-8 support and caching
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate');
 
-  }).on('error', err => {
-    console.error('Fetch failed:', err);
-    res.status(500).end('Proxy error!');
-  });
+    // ✅ Return the final HTML
+    res.status(200).end(html);
+  } catch (error) {
+    console.error('Proxy error:', error);
+    res.status(500).send('Proxy failed');
+  }
 }
